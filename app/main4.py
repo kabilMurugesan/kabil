@@ -1,6 +1,7 @@
 from doctest import Example
 from logging import raiseExceptions
 from sqlite3 import Cursor
+from urllib import response
 from fastapi import FastAPI,Response,HTTPException, status,Depends
 import fastapi
 from fastapi.params import Body
@@ -14,6 +15,7 @@ from psycopg2.errors import UniqueViolation
 from . import models,schemas,utils 
 from . database import engine, get_db
 from .routers import post,user,auth
+
 
 
 models.Base.metadata.create_all(bind=engine)

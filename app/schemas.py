@@ -40,7 +40,9 @@ class UserOut(BaseModel):
 class UserLogin(BaseModel):
     email:EmailStr
     password:str
-
+    
+class UserReLogin(BaseModel):
+    refreshtoken:str
 
 class Token(BaseModel):
     access_token=str
@@ -49,7 +51,7 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     id:Optional[str] = None
 
-
+'''
 class Token(BaseModel):
     refresh_token: str
     token_type: str
@@ -59,7 +61,7 @@ class TokenData(BaseModel):
     
 class UserRelogin(BaseModel):
     refresh_token:str
-
+'''
     
 
 

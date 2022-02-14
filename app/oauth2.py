@@ -13,6 +13,8 @@ from fastapi.security import OAuth2PasswordBearer
 from typing import List
 from sqlalchemy.orm import Session
 import time
+from fastapi_jwt_auth.exceptions import AuthJWTException
+from fastapi_jwt_auth import AuthJWT
 
 oauth2_scheme =OAuth2PasswordBearer(tokenUrl= 'login')
 
@@ -69,7 +71,18 @@ def create_refresh_token(data:dict):
 
     return encoded_jwt
 '''
-def verify_refresh_token(tokenla:str,credentials_exception):
+def verify_refresh_token(tokenla:str,credentials_exception,Authorize: AuthJWT = Depends()):
+    Authorize.jwt_refresh_token_required()
+    get_current_user=Authorize.get_jwt_subject()
+    new_access_token=Authorize.create_access_token(subject=get_current_user)
+    return{"new access token":new_access_token}
+    
+    
+    
+    
+    
+    
+    
     try:
         payload=jwt.decode(tokenla,SECRET_KEY,algorithms=[ALGORITHM])
         id:str=payload.get("user_id")
