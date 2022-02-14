@@ -6,6 +6,8 @@ from typing import Optional
 from pydantic import BaseModel,EmailStr
 from datetime import datetime
 
+
+
 class FeesBase(BaseModel):
     student_id: str
     student_name:str
@@ -38,13 +40,26 @@ class UserOut(BaseModel):
 class UserLogin(BaseModel):
     email:EmailStr
     password:str
- 
+
+
 class Token(BaseModel):
     access_token=str
     token_type=str
 
 class TokenData(BaseModel):
     id:Optional[str] = None
+
+
+class Token(BaseModel):
+    refresh_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    id:Optional[str]    
+    
+class UserRelogin(BaseModel):
+    refresh_token:str
+
     
 
 

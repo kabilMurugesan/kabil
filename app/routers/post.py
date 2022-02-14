@@ -22,8 +22,9 @@ def test_posts(db: Session = Depends(get_db),current_user:int=Depends(oauth2.get
     return posts
 
 @router.get("/{student_id}",response_model=schemas.Fees)
-def get_post(student_id:int,db: Session = Depends(get_db),current_user:int=Depends(oauth2.get_current_user)):
+def get_post(student_id:int,db: Session = Depends(get_db),current_user:int=Depends(oauth2.get_current_user)):#,ultra_user:int=Depends(oauth2.get_ultra_user)):
     print(current_user.email)
+    #print(ultra_user.email)
     post=db.query(models.Fees).filter(models.Fees.student_id == student_id).first()
 
     if not post:
