@@ -43,6 +43,11 @@ app.include_router(auth.router)
 def application():
     return{"welcome":"to fast api"}
 
+
+@app.get("/check")
+def platform_healthcheck():
+    return {'healthcheck': 'Everything OK!'}    
+
 #@app.get("/posts")
 #def paid(db: Session = Depends(get_db)):
  #   cursor.execute("SELECT * FROM FEES1")
