@@ -1,24 +1,26 @@
 from doctest import Example
+from logging import raiseExceptions
 from sqlite3 import Cursor
-from fastapi import FastAPI,Response,HTTPException, status
+from urllib import response
+from fastapi import FastAPI,Response,HTTPException, status,Depends
 import fastapi
 from fastapi.params import Body
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import List, Optional
+from sqlalchemy.orm import Session
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import time
 from psycopg2.errors import UniqueViolation
+from . import models,schemas,utils 
+from .database import engine, get_db
+from .routers import post,user,auth
+
+
+
+models.Base.metadata.create_all(bind=engine)
 
 app=FastAPI()
-
-class Fees(BaseModel):
-    student_id: str
-    academic_year: str
-    student_name: str
-    total_fees: str
-    fees_paid: str
-    fees_balance: str
 
 
 while True:
@@ -32,39 +34,19 @@ while True:
         print("Error:",error)
         time.sleep(2)
 
+app.include_router(post.router)
+app.include_router(user.router)
+app.include_router(auth.router)
+
+
 @app.get("/")
 def application():
     return{"welcome":"to fast api"}
 
-@app.get("/posts")
-def paid():
-    cursor.execute("SELECT * FROM FEES1")
-    details=cursor.fetchall()
-    return{"data":details}
+#@app.get("/posts")
+#def paid(db: Session = Depends(get_db)):
+ #   cursor.execute("SELECT * FROM FEES1")
+  #  details=cursor.fetchall()
+   # return{"data":details}
+    
 
-@app.post("/newlist")
-def paidlist(post:Fees):
-    cursor.execute("""INSERT INTO FEES1 (student_id,academic_year,student_name,total_fees,fees_paid,fees_balance) VALUES(%s,%s,%s,%s,%s,%s) RETURNING * """,
-    (post.student_id,post.academic_year,post.student_name,post.total_fees,post.fees_paid,post.fees_balance))
-    new_list=cursor.fetchone()
-    conn.commit()
-    return{"all data":new_list}
-
-@app.put("/editlist/{student_id}")
-def altering(student_id:int,post:Fees):
-        cursor.execute("""UPDATE FEES1 SET student_id=%s,academic_year=%s,student_name=%s,total_fees=%s,fees_paid=%s,fees_balance=%s WHERE student_id=%s RETURNING * """,
-        (post.student_id,post.academic_year,post.student_name,post.total_fees,post.fees_paid,post.fees_balance,(str(student_id))))
-        modified_list=cursor.fetchone()
-        conn.commit()
-        return{"altered_list":modified_list}
-   
-@app.delete("/deletedlist/{student_id}")
-def erasing(student_id:int):
-    cursor.execute("""DELETE FROM FEES1 WHERE student_id=%s RETURNING * """,(str(student_id),))
-    application=cursor.fetchone()
-    conn.commit()
-
-    if application == None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-        detail=f"post with:{student_id} doesnt exist")
-    return Response(status_code=status.HTTP_204_NO_CONTENT)
