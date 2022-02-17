@@ -15,7 +15,7 @@ from psycopg2.errors import UniqueViolation
 from . import models,schemas,utils 
 from .database import engine, get_db
 from .routers import post,user,auth
-
+from fastapi.testclient import TestClient   
 
 
 models.Base.metadata.create_all(bind=engine)
@@ -46,7 +46,15 @@ def application():
 
 @app.get("/check")
 def platform_healthcheck():
-    return {'healthcheck': 'Everything OK!'}    
+    return {'healthcheck': 'Everything OK!'} 
+
+
+
+
+
+
+
+    
 
 #@app.get("/posts")
 #def paid(db: Session = Depends(get_db)):
