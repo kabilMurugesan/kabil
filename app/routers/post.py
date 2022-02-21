@@ -11,6 +11,7 @@ from fastapi.security import OAuth2PasswordBearer
 router=APIRouter(
     prefix='/details',
     tags=['posts']
+    
 )
 
 
