@@ -15,24 +15,25 @@ from psycopg2.errors import UniqueViolation
 from . import models,schemas,utils 
 from .database import engine, get_db
 from .routers import post,user,auth
-from fastapi.testclient import TestClient   
+from fastapi.testclient import TestClient
+from .config import settings
+from fastapi.middleware.cors import CORSMiddleware
+
 
 
 models.Base.metadata.create_all(bind=engine)
 
+
 app=FastAPI()
 
-
-while True:
-    try:
-        conn = psycopg2.connect(host="localhost",database="fastapi",user="postgres",password="123456789",cursor_factory=RealDictCursor)
-        cursor =conn.cursor()
-        print("U HAVE SUCCESSFULLY CONNECTED WITH YOUR DATABASE!!!!!!")
-        break
-    except Exception as error:
-        print("U DIDN'T CONNECT WITH YOUR DATABASE& TRY AGAIN!!!!!")
-        print("Error:",error)
-        time.sleep(2)
+orgins=["*"]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=orgins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(post.router)
 app.include_router(user.router)
@@ -44,9 +45,7 @@ def application():
     return{"welcome":"to fast api"}
 
 
-@app.get("/check")
-def platform_healthcheck():
-    return {'healthcheck': 'Everything OK!'} 
+
 
 
 
