@@ -1,1 +1,1 @@
-web: gunicorn --bind app.main:app
+web: gunicorn app.main:app
