@@ -35,12 +35,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/")
+def application():
+    return{"welcome":"to fast api"}
+
+
 app.include_router(post.router)
 app.include_router(user.router)
 app.include_router(auth.router)
 
 
-@app.get("/")
+@app.get("/favicon.ico")
 def application():
     return{"welcome":"to fast api"}
 
